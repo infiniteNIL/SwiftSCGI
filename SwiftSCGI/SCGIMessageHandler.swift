@@ -61,11 +61,9 @@ public class SCGIMessageHandler : NSObject {
 	}
 
 	func headersString(message: SCGIMessage) -> String {
-		var s = ""
-		for (key, value) in message.headers {
-			s += "\(key) = \(value)<br/>"
+		return reduce(sorted(message.headers.keys), "") { (s, key) in
+			s + "\(key) = \(message.headers[key]!)<br/>"
 		}
-		return s
 	}
 
 	//
