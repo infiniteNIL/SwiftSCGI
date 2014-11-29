@@ -1,6 +1,6 @@
 //
 //  sockaddr.swift
-//  From a gist: https://gist.github.com/brendanberg/eb10bda0d24d01606d4c
+//  Based on gist: https://gist.github.com/brendanberg/eb10bda0d24d01606d4c
 //
 //
 
@@ -67,8 +67,7 @@ extension sockaddr {
 	The human-readable, dotted quad string representation of the socket's IPv4 address.
 	*/
 	var addressString: String {
-		let data = self.sa_data
-		return "\(data.2).\(data.3).\(data.4).\(data.5)"
+		return "\(sa_data.2).\(sa_data.3).\(sa_data.4).\(sa_data.5)"
 	}
 	
 }
