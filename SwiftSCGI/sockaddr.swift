@@ -25,42 +25,58 @@ extension sockaddr {
 		* \returns The socket's port number as a 16-bit unsigned integer
 		*/
 		get {
-			// TODO: Make sure this is done in a machine-architecture indepenent way.
-			return UInt16(sa_data.1) << 8 + UInt16(sa_data.0)
-			//			return (UInt16(sa_data.1.asUnsigned()) << 8) + UInt16(sa_data.0.asUnsigned())
+			return networkToHost([sa_data.1, sa_data.0])
 		}
+
 		/*! Sets the socket's port number by destructuring the first two bytes of the
 		*  sa_data field.
 		* \param newValue The port number as a 16-bit unsigned integer
 		*/
 		set {
-			// TODO: Make sure this is done in a machine-architecture indepenent way.
-			sa_data.0 = CChar((newValue & 0xFF00) >> 8)
-			sa_data.1 = CChar((newValue & 0x00FF) >> 0)
+			let networkBytes = hostToNetwork(newValue)
+			sa_data.0 = networkBytes.0
+			sa_data.1 = networkBytes.1
 		}
 
 	}
 
 	var sin_addr: in_addr_t {
 		get {
-			let first = in_addr_t(sa_data.2) >> 0
-			let second = in_addr_t(sa_data.3) >> 08
-
-			return (
-				// Restructures bytes 3 through 6 of sa_data into a 32-bit unsigned
-				// integer IPv4 address
-				// TODO: This should probably go through ntohs() first.
-				first + second + in_addr_t(sa_data.4) >> 16 + in_addr_t(sa_data.5) >> 24
-			)
+			return networkToHost([sa_data.2, sa_data.3, sa_data.4, sa_data.5])
 		}
+
 		set {
 			// Destructures a 32-bit IPv4 address to set as bytes 3 through 6 of sa_data
-			// TODO: This should probably go through htons() first.
-			sa_data.2 = CChar((newValue & 0x000000FF) >> 00)
-			sa_data.3 = CChar((newValue & 0x0000FF00) >> 08)
-			sa_data.4 = CChar((newValue & 0x00FF0000) >> 16)
-			sa_data.5 = CChar((newValue & 0xFF000000) >> 24)
+			let networkBytes = hostToNetwork(newValue)
+			sa_data.2 = networkBytes.0
+			sa_data.3 = networkBytes.1
+			sa_data.4 = networkBytes.2
+			sa_data.5 = networkBytes.3
 		}
+
+	}
+
+	private func hostToNetwork(value: UInt16) -> (Int8, Int8) {
+		let byte0 = Int8(bitPattern: UInt8((value & 0xFF00) >> 8))
+		let byte1 = Int8(bitPattern: UInt8((value & 0x00FF) >> 0))
+		return (byte0, byte1)
+	}
+
+	private func hostToNetwork(value: UInt32) -> (Int8, Int8, Int8, Int8) {
+		let network_value = value.bigEndian
+		let byte0 = Int8(bitPattern: UInt8((network_value & 0xFF000000) >> 24))
+		let byte1 = Int8(bitPattern: UInt8((network_value & 0x00FF0000) >> 16))
+		let byte2 = Int8(bitPattern: UInt8((network_value & 0x0000FF00) >> 08))
+		let byte3 = Int8(bitPattern: UInt8((network_value & 0x000000FF) >> 00))
+		return (byte0, byte1, byte2, byte3)
+	}
+	
+	private func networkToHost<T: UnsignedIntegerType>(var bytes: [Int8]) -> T {
+		assert(sizeof(T) == bytes.count, "size of network unsigned type must match number of bytes")
+		let data = NSData(bytes: &bytes, length: bytes.count)
+		var hostValue: T = 0
+		data.getBytes(&hostValue, length: bytes.count)
+		return hostValue
 	}
 
 	/**
