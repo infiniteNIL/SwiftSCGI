@@ -26,7 +26,7 @@ extension sockaddr {
 		*/
 		get {
 			let value: UInt16 = networkBytesToHost([sa_data.0, sa_data.1])
-			return value.littleEndian
+			return value.bigEndian
 		}
 
 		/*! Sets the socket's port number by destructuring the first two bytes of the
