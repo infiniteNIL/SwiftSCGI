@@ -12,6 +12,7 @@
 		DC1E8DE71A1FD94900E15002 /* SCGIMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1E8DE61A1FD94900E15002 /* SCGIMessageHandler.swift */; };
 		DC1E8DE91A216C7300E15002 /* sockaddr.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1E8DE81A216C7300E15002 /* sockaddr.swift */; };
 		DC1E8DEB1A216F2000E15002 /* SCGIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1E8DEA1A216F2000E15002 /* SCGIMessage.swift */; };
+		DC5845951A2BFB07002B54DB /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = DC5845941A2BFB07002B54DB /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,7 @@
 		DC1E8DE61A1FD94900E15002 /* SCGIMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCGIMessageHandler.swift; sourceTree = "<group>"; };
 		DC1E8DE81A216C7300E15002 /* sockaddr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sockaddr.swift; sourceTree = "<group>"; };
 		DC1E8DEA1A216F2000E15002 /* SCGIMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCGIMessage.swift; sourceTree = "<group>"; };
+		DC5845941A2BFB07002B54DB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				DC1E8DE61A1FD94900E15002 /* SCGIMessageHandler.swift */,
 				DC1E8DEA1A216F2000E15002 /* SCGIMessage.swift */,
 				DC1E8DE81A216C7300E15002 /* sockaddr.swift */,
+				DC5845941A2BFB07002B54DB /* README.md */,
 			);
 			path = SwiftSCGI;
 			sourceTree = "<group>";
@@ -130,6 +133,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC5845951A2BFB07002B54DB /* README.md in Sources */,
 				DC1E8DE91A216C7300E15002 /* sockaddr.swift in Sources */,
 				DC1E8DEB1A216F2000E15002 /* SCGIMessage.swift in Sources */,
 				DC1E8DE71A1FD94900E15002 /* SCGIMessageHandler.swift in Sources */,
@@ -249,6 +253,7 @@
 				DC1E8DE31A1FC1D100E15002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
