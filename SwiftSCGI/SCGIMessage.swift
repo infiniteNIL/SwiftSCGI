@@ -20,94 +20,77 @@ func SCGIHeadersLength(message: NSData) -> Int? {
 }
 
 public struct SCGIMessage {
+	
 	private let data: NSData
-	private var headersAndBody: ([String: String], String) = ([:], "")
+	private(set) var headers: [String : String] = [:]
+	private(set) var body = ""
 
 	init(data: NSData) {
 		self.data = data
-		headersAndBody = parseRequest(data)
-	}
-
-	var headers: [String : String] {
-		return headersAndBody.0
-	}
-
-	var body: String {
-		return headersAndBody.1
+		let (headers, body) = parseRequest(data)
+		self.headers = headers
+		self.body = body
 	}
 
 	func parseRequest(requestData: NSData) -> (SCGIHeaders, String) {
-		if let headersLength = extractHeadersLengthFromRequest(requestData) {
-			return extractHeadersAndBody(requestData)
-		}
-		else {
-			return ([:], "")
-		}
-	}
-
-	private func extractHeadersLengthFromRequest(requestData: NSData) -> Int? {
-		if let s = NSString(data: requestData, encoding: NSUTF8StringEncoding) {
-			let colonRange = s.rangeOfString(":")
-			assert(colonRange.location != NSNotFound, "SCGI Content-Length")
-			let lengthString = s.substringToIndex(colonRange.location)
-			return lengthString.toInt()
-		}
-
-		return nil;
-	}
-
-	private func extractHeadersAndBody(requestData: NSData) -> (SCGIHeaders, String) {
-		var headers: SCGIHeaders = [:]
-
 		let count = requestData.length / sizeof(UInt8)
 		var bytes = [UInt8](count: count, repeatedValue: 0)
 		requestData.getBytes(&bytes, length: count * sizeof(UInt8))
 
-		var index = 0
+		let (headersLength, restOfBytes) = parseHeadersLength(bytes)
+		if headersLength != nil {
+			let (headers, bodyBytes) = parseHeaders(restOfBytes, headersLength: headersLength!)
+			let body = parseBody(bodyBytes)
+			return (headers, body)
+		}
 
-		// Skip headers length (terminated by ':')
-		let colon = find(bytes, UInt8(":"))
-		assert(colon != nil, "Didn't find colon separator")
-		assert(colon! + 1 < count, "Nothing after colon")
-		index = colon! + 1
+		return ([:], "")
+	}
 
-		// Parse Headers:
+	private func parseHeadersLength(bytes: [UInt8]) -> (headersLength: Int?, rest: [UInt8]) {
+		if let colon = find(bytes, UInt8(":")) {
+			if let lengthStr = String(bytes: bytes[0..<colon], encoding: NSASCIIStringEncoding) {
+				if let length = lengthStr.toInt() {
+					let rest = Array(bytes[colon + 1..<bytes.count])
+					return (length, rest)
+				}
+			}
+		}
+		return (nil, bytes)
+	}
+
+	private func parseHeaders(bytes: [UInt8], headersLength: Int) -> (headers: SCGIHeaders, rest: [UInt8]) {
 		// Each Header is a pair of strings terminated by zero. (i.e. name 00 value 00)
 		//
-		var headerName = ""
-		var s = ""
-		var readingName = true
+		let splits = split(bytes, { $0 == 00 }, allowEmptySlices: true)
 
-		while index < count {
-			if bytes[index] == 0 {
-				// End of header or value
-				if readingName {
-					headerName = s
-				}
-				else {
-					let headerValue = s
-					headers[headerName] = headerValue
-				}
+		// Convert splits to strings
+		//
+		let strings = splits.map { self.bytesToString(Array($0)) }
 
-				s = ""
-				readingName = !readingName
-			}
-			else {
-				let c = Character(UnicodeScalar(bytes[index]))
-				s.append(c)
-			}
-			++index
+		// Pair up strings
+		//
+		var headers: SCGIHeaders = [:]
+		var i = 0
+		while i < strings.count - 1{
+			let header = strings[i++]
+			let value = strings[i++]
+			headers[header] = value
 		}
 
-		// Parse body
-		var body = ""
-		while index < count {
-			let c = Character(UnicodeScalar(bytes[index]))
-			body.append(c)
-			++index
-		}
+		// headersLength + 1 to skip ending comma
+		let bodyBytes = Array(bytes[headersLength + 1..<bytes.count])
+		return (headers, bodyBytes)
+	}
 
-		return (headers, body)
+	private func parseBody(bytes: [UInt8]) -> String {
+		return bytesToString(bytes)
+	}
+
+	private func bytesToString(bytes: [UInt8]) -> String {
+		return reduce(bytes, "") { (str, byte) in
+			str + String(Character(UnicodeScalar(byte)))
+		}
 	}
 
 }
