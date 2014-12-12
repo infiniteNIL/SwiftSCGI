@@ -10,7 +10,6 @@
 		DC1E8DDE1A1FC1D100E15002 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1E8DDD1A1FC1D100E15002 /* main.swift */; };
 		DC1E8DE51A1FD64C00E15002 /* SCGIServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1E8DE41A1FD64C00E15002 /* SCGIServer.swift */; };
 		DC1E8DE71A1FD94900E15002 /* SCGIMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1E8DE61A1FD94900E15002 /* SCGIMessageHandler.swift */; };
-		DC1E8DE91A216C7300E15002 /* sockaddr.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1E8DE81A216C7300E15002 /* sockaddr.swift */; };
 		DC1E8DEB1A216F2000E15002 /* SCGIMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1E8DEA1A216F2000E15002 /* SCGIMessage.swift */; };
 /* End PBXBuildFile section */
 
@@ -31,7 +30,6 @@
 		DC1E8DDD1A1FC1D100E15002 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		DC1E8DE41A1FD64C00E15002 /* SCGIServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCGIServer.swift; sourceTree = "<group>"; };
 		DC1E8DE61A1FD94900E15002 /* SCGIMessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCGIMessageHandler.swift; sourceTree = "<group>"; };
-		DC1E8DE81A216C7300E15002 /* sockaddr.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = sockaddr.swift; sourceTree = "<group>"; };
 		DC1E8DEA1A216F2000E15002 /* SCGIMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SCGIMessage.swift; sourceTree = "<group>"; };
 		DC5845941A2BFB07002B54DB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -70,7 +68,6 @@
 				DC1E8DE41A1FD64C00E15002 /* SCGIServer.swift */,
 				DC1E8DE61A1FD94900E15002 /* SCGIMessageHandler.swift */,
 				DC1E8DEA1A216F2000E15002 /* SCGIMessage.swift */,
-				DC1E8DE81A216C7300E15002 /* sockaddr.swift */,
 				DC5845941A2BFB07002B54DB /* README.md */,
 			);
 			path = SwiftSCGI;
@@ -132,7 +129,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DC1E8DE91A216C7300E15002 /* sockaddr.swift in Sources */,
 				DC1E8DEB1A216F2000E15002 /* SCGIMessage.swift in Sources */,
 				DC1E8DE71A1FD94900E15002 /* SCGIMessageHandler.swift in Sources */,
 				DC1E8DE51A1FD64C00E15002 /* SCGIServer.swift in Sources */,
