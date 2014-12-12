@@ -15,7 +15,7 @@ public enum SCGIServerState {
 	case Stopping
 }
 
-let SCGI_SERVER_ADDRESS = "127.0.0.1"
+let SERVER_IP_ADDRESS = "127.0.0.1"
 
 struct SCGIRequest {
 	var contentLength: Int = 0
@@ -30,12 +30,14 @@ public class SCGIServer : NSObject {
 
 	var listeningHandle: NSFileHandle?
 	var socket: CFSocketRef?
+	private let address: sockaddr_in
 	var incomingRequests: [NSFileHandle : NSMutableData] = [:]
 	var responseHandlers: [SCGIMessageHandler] = []
 	var SCGIHeadersContentLength: Int = 0
 
 	init(port: in_port_t) {
 		self.port = port
+		address = sockaddr_in(address: SERVER_IP_ADDRESS, port: port)
 	}
 
 	private(set) var lastError: NSError? {
@@ -63,8 +65,7 @@ public class SCGIServer : NSObject {
 		lastError = nil;
 		state = .Starting
 
-		let serverIPAddress = inet_addr(SCGI_SERVER_ADDRESS)
-		if serverIPAddress == __uint32_t.max {
+		if inet_addr(SERVER_IP_ADDRESS) == __uint32_t.max {
 			errorWithName("Unable to parse server address")
 			return
 		}
@@ -82,11 +83,8 @@ public class SCGIServer : NSObject {
 			return
 		}
 
-		var address = sockaddr()
-		address.sa_family = sa_family_t(AF_INET)
-		address.sin_addr = serverIPAddress
-		address.sin_port = port
-		let addressData = NSData(bytes: &address, length: sizeof(sockaddr))
+		var addr = address
+		let addressData = NSData(bytes: &addr, length: sizeof(sockaddr_in))
 		if CFSocketSetAddress(socket!, addressData) != .Success {
 			errorWithName("Unable to bind socket to address.")
 			return
@@ -202,7 +200,7 @@ public class SCGIServer : NSObject {
 		}
 
 		if socket != nil {
-			CFSocketInvalidate(socket);
+			CFSocketInvalidate(socket!);
 			socket = nil;
 		}
 

@@ -6,6 +6,16 @@
 
 import Foundation
 
+extension sockaddr_in {
+	init(address: String, port: in_port_t) {
+		sin_len = UInt8(sizeof(sockaddr_in))
+		sin_family = sa_family_t(AF_INET)
+		sin_port = port.bigEndian
+		sin_addr = in_addr(s_addr: inet_addr(address))
+		sin_zero = (0, 0, 0, 0, 0, 0, 0, 0)
+	}
+}
+
 // C sockaddr struct Extension
 // ---------------------------
 // The Swift type checker doesn't allow us to use sockaddr and sockaddr_in
