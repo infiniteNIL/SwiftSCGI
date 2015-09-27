@@ -117,7 +117,7 @@ public class SCGIServer : NSObject {
 	//
 	func receiveIncomingConnectionNotification(notification: NSNotification) {
 		let userInfo = notification.userInfo!
-		let incomingFileHandle = userInfo[NSFileHandleNotificationFileHandleItem] as NSFileHandle?
+		let incomingFileHandle = userInfo[NSFileHandleNotificationFileHandleItem] as! NSFileHandle?
 
 		if incomingFileHandle != nil {
 			incomingRequests[incomingFileHandle!] = NSMutableData()
@@ -139,7 +139,7 @@ public class SCGIServer : NSObject {
 	// a SCGIResponseHandler will be spawned to generate a response.
 	//
 	func receiveIncomingDataNotification(notification: NSNotification) {
-		let incomingFileHandle = notification.object as NSFileHandle!
+		let incomingFileHandle = notification.object as! NSFileHandle!
 		let incomingData = incomingFileHandle?.availableData
 
 		if incomingData?.length == 0 {
@@ -186,7 +186,7 @@ public class SCGIServer : NSObject {
 	//
 	func closeHandler(handler: SCGIMessageHandler) {
 		handler.endResponse()
-		if let index = find(responseHandlers, handler) {
+		if let index = responseHandlers.indexOf(handler) {
 			responseHandlers.removeAtIndex(index)
 		}
 	}
@@ -245,7 +245,7 @@ public class SCGIServer : NSObject {
 	//    errorName - the description used for the error
 	//
 	private func errorWithName(errorName: NSString) {
-		let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString(errorName, comment: "")]
+		let userInfo = [NSLocalizedDescriptionKey: NSLocalizedString(errorName as String, comment: "")]
 		lastError = NSError(domain: "SCGIServerError", code: 0, userInfo: userInfo)
 	}
 

@@ -13,7 +13,7 @@ func SCGIHeadersLength(message: NSData) -> Int? {
 		let colonRange = s.rangeOfString(":")
 		assert(colonRange.location != NSNotFound, "SCGI Content-Length not found")
 		let lengthString = s.substringToIndex(colonRange.location)
-		return lengthString.toInt()
+		return Int(lengthString)
 	}
 
 	return nil;
@@ -48,9 +48,9 @@ public struct SCGIMessage {
 	}
 
 	private func parseHeadersLength(bytes: [UInt8]) -> (headersLength: Int?, rest: [UInt8]) {
-		if let colon = find(bytes, UInt8(":")) {
+		if let colon = bytes.indexOf(UInt8(":".unicodeScalars.first!.value)) {
 			if let lengthStr = String(bytes: bytes[0..<colon], encoding: NSASCIIStringEncoding) {
-				if let length = lengthStr.toInt() {
+				if let length = Int(lengthStr) {
 					let rest = Array(bytes[colon + 1..<bytes.count])
 					return (length, rest)
 				}
@@ -62,7 +62,7 @@ public struct SCGIMessage {
 	private func parseHeaders(bytes: [UInt8], headersLength: Int) -> (headers: SCGIHeaders, rest: [UInt8]) {
 		// Each Header is a pair of strings terminated by zero. (i.e. name 00 value 00)
 		//
-		let splits = split(bytes, { $0 == 00 }, allowEmptySlices: true)
+		let splits = bytes.split(allowEmptySlices: true, isSeparator: { $0 == 00 })
 
 		// Convert splits to strings
 		//
@@ -88,7 +88,7 @@ public struct SCGIMessage {
 	}
 
 	private func bytesToString(bytes: [UInt8]) -> String {
-		return reduce(bytes, "") { (str, byte) in
+		return bytes.reduce("") { (str, byte) in
 			str + String(Character(UnicodeScalar(byte)))
 		}
 	}
