@@ -30,6 +30,7 @@ Configuring Your Web Server
 All web servers have a different way of being configured, so consult your web server's documentation. 
 Here's an excerpt from a lighttpd configuration file:
 
+	server.modules = ("mod_scgi")
 	$HTTP["host"] == "swift.test.com" {
 	  server.document-root  = "/var/www/example.com/public"
 	  server.error-handler-404 = "/error.html"
@@ -38,6 +39,7 @@ Here's an excerpt from a lighttpd configuration file:
 		  (
 			"host" => "127.0.0.1",
 			"port" => 9998,
+			"fix-root-scriptname" => "enable",
 			"check-local" => "disable",
 		  )
 		)
