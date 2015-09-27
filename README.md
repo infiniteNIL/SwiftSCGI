@@ -39,6 +39,7 @@ Here's an excerpt from a lighttpd configuration file:
 		  (
 			"host" => "127.0.0.1",
 			"port" => 9998,
+			"fix-root-scriptname" => "enable",
 			"check-local" => "disable",
 		  )
 		)
