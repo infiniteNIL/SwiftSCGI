@@ -11,6 +11,6 @@ import Foundation
 let server = SCGIServer(port: 9998)
 server.start()
 
-println("SwiftSCGI listening on port \(server.port)")
+print("SwiftSCGI listening on port \(server.port)")
 
 CFRunLoopRun()
