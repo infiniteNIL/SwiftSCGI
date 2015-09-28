@@ -168,6 +168,7 @@ public class SCGIServer : NSObject {
 
 		if (requestData?.length >= SCGIHeadersContentLength) {
 			// We've received all the data
+			SCGIHeadersContentLength = 0
 			let handler = SCGIMessageHandler(message: SCGIMessage(data: requestData!),
 				requestFileHandle: incomingFileHandle, server: self)
 			responseHandlers.append(handler);
